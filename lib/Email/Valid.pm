@@ -339,7 +339,7 @@ sub _is_domain_label {
 sub address {
   my $self = shift;
   my %args = $self->_rearrange([qw( address fudge mxcheck tldcheck fqdn
-                                    local_rules )], \@_);
+                                    local_rules localpart)], \@_);
 
   my $addr = $args{address} or return $self->details('rfc822');
   $addr = $addr->address if (blessed($addr) && $addr->isa('Mail::Address'));
@@ -552,6 +552,7 @@ individual methods below for details.
  -fqdn
  -allow_ip
  -local_rules
+ -localpart
 
 =item mx ( <ADDRESS>|<DOMAIN> )
 
@@ -614,6 +615,12 @@ Specifies whether addresses passed to address() should be tested
 for domain specific restrictions.  Currently, this is limited to
 certain AOL restrictions that I'm aware of.  The default is false.
 
+=item localpart
+
+Specifies whether the local part of an address should be tested.
+The test is for the existence of the local part and that its
+length is less or equal to 64 characters. The default is true.
+
 =item mxcheck ( <TRUE>|<FALSE> )
 
 Specifies whether addresses passed to address() should be checked
@@ -628,7 +635,7 @@ for a valid top level domains.  The default is false.
 
 This is the primary method which determines whether an email
 address is valid.  Its behavior is modified by the values of
-mxcheck(), tldcheck(), local_rules(), fqdn(), and fudge().  If the address
+mxcheck(), tldcheck(), local_rules(), localpart(), fqdn(), and fudge().  If the address
 passes all checks, the (possibly modified) address is returned as
 a string.  Otherwise, undef is returned.
 In a list context, the method also returns an instance of the
